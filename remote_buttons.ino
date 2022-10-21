@@ -15,7 +15,7 @@ void loop() {
     int readResults = results.value;  // Results of decoding are stored in result.value
     Serial.println(" ");
     Serial.print("Code: ");
-    Serial.println(results.value);  //prints the value a a button press
+    Serial.println(results.value, HEX);  //prints the value a a button press
     Serial.println(" ");
     irrecv.resume();  // Restart the ISR state machine and Receive the next value
   }
