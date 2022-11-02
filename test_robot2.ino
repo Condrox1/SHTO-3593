@@ -28,14 +28,12 @@ decode_results results;
 
 
 //////////SensorsDEFINE//////////
-#define OP_FRONT_POW  0 //BROWN
-#define OP_FRONT_OUT A0 //BLACK 
+#define OP_FRONT_OUT A0 //Black  
+#define OP_LEFT_OUT  A2 //Green
+#define OP_RIGHT_OUT A1 //Yellow
 
-#define OP_LEFT_POW   0 //BROWN 
-#define OP_LEFT_OUT  A1 //BLACK
-
-#define OP_RIGHT_POW  0 //BROWN
-#define OP_RIGHT_OUT A2 //BLACK
+#define OP_POWER_VAL 255
+#define OP_POWER A3 
 
 #define AR_LEFT_GND   5
 #define AR_LEFT_POW   7 
@@ -88,21 +86,24 @@ bool Receiver()
 
 void Search_ENEMY()
 {
+
 delay(250);
 KILLSWITCH();    
 }
 
 void ATTACK()
 {
+
     bool F = !analogRead(OP_FRONT_OUT);
     bool L = !analogRead(OP_LEFT_OUT);
     bool R = !analogRead(OP_RIGHT_OUT);
     
-    /*Serial.print(F);
+    Serial.print(F);
     Serial.print(L);
     Serial.print(R);
-    Serial.println(" ");*/   
-    
+    Serial.println(" "); 
+
+    delay(300);
     if(F)
      ACTION_MOTORS(MOVE_FRONT);
     else if(R)
@@ -155,7 +156,17 @@ void setup()
     irrecv.enableIRIn();
     pinMode(13,OUTPUT);
 
-////////////SENSORS_SETUP/////////////
+/////////SENSORS_ENEMY_SETUP///////////
+    pinMode(OP_FRONT_OUT,INPUT);
+    pinMode(OP_LEFT_OUT,INPUT);
+    pinMode(OP_RIGHT_OUT,INPUT);
+
+    pinMode(OP_POWER,OUTPUT);
+    analogWrite(OP_POWER,OP_POWER_VAL);
+
+/////////SENSORS_ENEMY_SETUP///////////
+
+/////////SENSORS_ARENA_SETUP///////////
     //LEFT
     pinMode(AR_LEFT_GND,OUTPUT);
     pinMode(AR_LEFT_OUT,INPUT);
@@ -166,7 +177,7 @@ void setup()
     pinMode(AR_RIGHT_OUT,INPUT);
     pinMode(AR_RIGHT_POW , OUTPUT);
     digitalWrite(AR_RIGHT_POW,HIGH);
-////////////SENSORS_SETUP/////////////
+/////////SENSORS_ARENA_SETUP///////////
 }
 
 // Read the command and apply the POWER
@@ -185,11 +196,11 @@ void ACTION_MOTORS(int Command)
 
 void loop()
 {    
-    if(1)
+    if(Receiver())
     {
-       if(Search_ARENA())
+       if(1)
         {
-           // ATTACK();
+          ATTACK();
         }
     }
     
